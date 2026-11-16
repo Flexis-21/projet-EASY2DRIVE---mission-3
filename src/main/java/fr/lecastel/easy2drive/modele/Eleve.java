@@ -6,7 +6,6 @@ public class Eleve
     private string codePostal;
     private string ville;
     private string dateInscription;
-    private int idAutoEcole;
 
     /**
      * Construit un élève
@@ -21,5 +20,4 @@ public class Eleve
         this.codePostal = codePostal;
         this.ville = ville;
         this.dateInscription = dateInscription;
-        this.idAutoEcole = idAutoEcole;
     }
