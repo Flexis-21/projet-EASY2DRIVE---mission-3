@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
 
     <name>Easy2Drive Gestion</name>
-    <description>Application de bureau Java pour la gestion d'auto-école Easy2Drive (Mission 3)</description>
+    <description>Version de bureau de l'espace Pro Easy2Drive</description>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -48,6 +48,9 @@
                         <manifest>
                             <mainClass>fr.lecastel.easy2drive.Main</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <Class-Path>../lib/mysql-connector-j-8.3.0.jar</Class-Path>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>

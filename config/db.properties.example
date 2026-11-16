@@ -1,0 +1,17 @@
+# Copie ce fichier sous le nom db.properties et renseigne les paramètres locaux.
+db.host=127.0.0.1
+db.port=3306
+db.name=dbEasy
+db.user=easy2drive_app
+db.password=
+
+# Valeurs du pilote MySQL : PREFERRED, REQUIRED ou VERIFY_IDENTITY, selon le serveur.
+db.sslMode=PREFERRED
+
+# Facultatif : comptes SQL distincts pour les modifications, selon les rôles du PHP.
+# db.eleve.user=
+# db.eleve.password=
+# db.formateur.user=
+# db.formateur.password=
+# db.directeur.user=
+# db.directeur.password=
