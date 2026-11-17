@@ -1,4 +1,5 @@
 package fr.lecastel.easy2drive.controleur;
+import fr.lecastel.easy2drive.dao.TableauDeBordDAO;
 
 import fr.lecastel.easy2drive.dao.AutoEcoleDAO;
 import fr.lecastel.easy2drive.dao.CompteDAO;
@@ -14,6 +15,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.regex.Pattern;
+
 
 public class CompteControleur {
     private static final Pattern MINUSCULE = Pattern.compile("[a-z]");
@@ -108,6 +110,22 @@ public class CompteControleur {
             profil.getAutoEcole().setAdresse(adresse);
         }
     }
+
+    public boolean peutConsulterTableauDeBord() {
+    Utilisateur profil = getUtilisateur();
+    return profil.estDirecteur() || "Secretaire".equals(profil.getRole());
+}
+
+public TableauDeBordDAO.Donnees chargerTableauDeBord() throws SQLException {
+    if (!peutConsulterTableauDeBord()) {
+        throw new IllegalStateException("Le tableau de bord est réservé au personnel administratif.");
+    }
+
+    Utilisateur profil = getUtilisateur();
+    try (Connection connexion = base.ouvrir(profil.getRole())) {
+        return new TableauDeBordDAO().charger(connexion, profil.getAutoEcole().getId());
+    }
+}
 
     public void modifierAutoEcole(Adresse adresse) throws SQLException {
         Utilisateur profil = getUtilisateur();
