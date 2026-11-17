@@ -1,5 +1,10 @@
 package fr.lecastel.easy2drive.vue;
 
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import fr.lecastel.easy2drive.controleur.CompteControleur;
 import fr.lecastel.easy2drive.modele.Utilisateur;
 import java.awt.BorderLayout;
@@ -65,10 +70,61 @@ public class AccueilFrame extends JFrame {
         accueil.ajouterValeur("Auto-école", utilisateur.getAutoEcole().getRaisonSociale());
         JPanel page = new JPanel(new BorderLayout());
         page.add(accueil, BorderLayout.NORTH);
+        if (controleur.peutConsulterTableauDeBord()) {
+        page.add(creerTableauDeBord(), BorderLayout.CENTER);
+    }
         JLabel pied = new JLabel("© 2025 Easy2Drive", SwingConstants.CENTER);
         page.add(pied, BorderLayout.SOUTH);
         afficher(page);
     }
+    
+    private JPanel creerTableauDeBord() {
+    JPanel panneau = new JPanel(new BorderLayout());
+
+    try {
+        var donnees = controleur.chargerTableauDeBord();
+        var onglets = new JTabbedPane();
+        String[] colonnesLecon = {"Date et heure", "Élève", "Formateur"};
+        String[] colonnesEleve = {"Prénom", "Nom"};
+
+        onglets.addTab("Leçons du jour", creerTable(
+                donnees.leconsDuJour(), colonnesLecon, "Aucune leçon prévue aujourd’hui."));
+        onglets.addTab("Prochaines leçons", creerTable(
+                donnees.prochainesLecons(), colonnesLecon, "Aucune leçon prévue à partir de demain."));
+        onglets.addTab("Sans référent", creerTable(
+                donnees.sansReferent(), colonnesEleve, "Tous les élèves ont un référent."));
+        onglets.addTab("Sans leçon depuis 30 jours", creerTable(
+                donnees.sansLeconRecente(), colonnesEleve, "Aucun élève à signaler."));
+        onglets.addTab("Chevauchements", creerTable(
+                donnees.chevauchements(), colonnesLecon, "Aucun chevauchement détecté."));
+
+        panneau.add(onglets, BorderLayout.CENTER);
+    } catch (SQLException exception) {
+        panneau.add(new JLabel("Impossible de charger le tableau de bord."));
+        exception.printStackTrace();
+    }
+
+    return panneau;
+}
+
+private JPanel creerTable(List<String[]> lignes, String[] colonnes, String messageVide) {
+    JPanel panneau = new JPanel(new BorderLayout());
+
+    if (lignes.isEmpty()) {
+        panneau.add(new JLabel(messageVide, SwingConstants.CENTER));
+        return panneau;
+    }
+
+    JTable tableau = new JTable(lignes.toArray(String[][]::new), colonnes) {
+        @Override
+        public boolean isCellEditable(int ligne, int colonne) {
+            return false;
+        }
+    };
+
+    panneau.add(new JScrollPane(tableau), BorderLayout.CENTER);
+    return panneau;
+}
 
     private void afficherProfil() {
         afficher(new ProfilPanel(controleur, this::afficherProfil));

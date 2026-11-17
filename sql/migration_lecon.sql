@@ -23,3 +23,13 @@ INSERT INTO `Lecon` (`idEleve`, `idFormateur`, `dateLecon`, `heureDebut`, `duree
 (3, 2, CURDATE(), '09:00:00', 60, 'Planifiée'),
 (5, 2, CURDATE(), '11:00:00', 60, 'Planifiée'),
 (3, 7, DATE_ADD(CURDATE(), INTERVAL 1 DAY), '14:00:00', 120, 'Planifiée');
+
+CREATE TABLE IF NOT EXISTS Planning (
+    plId INT AUTO_INCREMENT PRIMARY KEY,
+    plIdEleve INT NOT NULL,
+    plIdFormateur INT NOT NULL,
+    plDuree INT NOT NULL,
+    plDateHeureDebut DATETIME NOT NULL,
+    FOREIGN KEY (plIdEleve) REFERENCES Eleve(idUtilisateur),
+    FOREIGN KEY (plIdFormateur) REFERENCES Formateur(idUtilisateur)
+) ENGINE=InnoDB;
